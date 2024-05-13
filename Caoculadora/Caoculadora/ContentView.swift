@@ -15,7 +15,7 @@ struct ContentView: View {
     let portes = ["Pequeno", "Medio", "Grande"]
     
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading, spacing: 20){
             Text("Qual a idade do seu cão?")
             Text("Anos")
             TextField("Quantos anos completos tem seu cão?",
@@ -48,7 +48,7 @@ struct ContentView: View {
 //            .background(Color.blue)
 //            .foregroundColor(.white)
 //            .cornerRadius(10)
-            
+            Spacer()
             if let result {
                 Text("Seu cachorro tem, em idade humana...")
                 Text("\(result) anos")
