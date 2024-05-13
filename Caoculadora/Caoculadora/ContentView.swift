@@ -12,46 +12,40 @@ struct ContentView: View {
     @State var months: Int? = nil
     @State var result: Int?
     @State var porteSelecionado = "Pequeno"
-    let portes = ["Pequeno", "Medio", "Grande"]
+    let portes = ["Pequeno", "Médio", "Grande"]
+    @State var porteSelected = Porte.pequeno
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20){
             Text("Qual a idade do seu cão?")
+                .font(.h5)
             Text("Anos")
+                .font(.body1)
             TextField("Quantos anos completos tem seu cão?",
                       value: $years,
-                      format: .number)
+                      format: .number).font(.body1)
           
             Text("Meses")
+                .font(.body1)
             TextField("E quantos meses além disso ele tem?",
                       value: $months,
-                      format: .number)
+                      format: .number).font(.body1)
             Text("Porte")
+                .font(.body1)
             
-            Picker("Portes", selection: $porteSelecionado){
-                ForEach(portes, id: \.self){
+            Picker("Portes", selection: $porteSelected){
+                ForEach(Porte.allCases, id: \.self){
                     porte in
-                    Text(porte)
+                    Text(porte.rawValue)
                 }
             }
             .pickerStyle(.segmented)
             .padding()
             
-            //botao sem trailing closure
-            //Button(action: {print("Botão foi clicado")}, label: {Text("Clique aqui")})
-            //botao com trailing closure
-//            Button("Clique aqui"){
-//                print("Botão foi clicado")
-//            }
-//            .frame(width: 300)
-//            .padding()
-//            .background(Color.blue)
-//            .foregroundColor(.white)
-//            .cornerRadius(10)
             Spacer()
             if let result {
-                Text("Seu cachorro tem, em idade humana...")
-                Text("\(result) anos")
+                Text("Seu cachorro tem, em idade humana...").font(.body1)
+                Text("\(result) anos").font(.display)
             } else {
                 Image(ImageResource.clarinha)
                     .resizable()
@@ -70,6 +64,7 @@ struct ContentView: View {
             .foregroundColor(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .bold()
+            .font(.body1)
         }
         .textFieldStyle(.roundedBorder)
         .keyboardType(.numberPad)
@@ -86,18 +81,15 @@ struct ContentView: View {
             return
         }
         let  multiplicador: Int
-        switch porteSelecionado {
-        case "Pequeno":
+        switch porteSelected {
+        case .pequeno:
             multiplicador = 6
-        case "Medio":
+        case .médio:
             multiplicador = 7
-        case "Grande":
+        case .grande:
             multiplicador = 8
-        default:
-            multiplicador = 0
         }
         result = years * multiplicador + ((months*multiplicador)/12)
-        
     }
 }
 
