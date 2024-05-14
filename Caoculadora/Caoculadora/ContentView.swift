@@ -11,9 +11,11 @@ struct ContentView: View {
     @State var years: Int? = nil
     @State var months: Int? = nil
     @State var result: Int?
-    @State var porteSelecionado = "Pequeno"
-    let portes = ["Pequeno", "Médio", "Grande"]
+//    @State var porteSelecionado = "Pequeno"
+//    let portes = ["Pequeno", "Médio", "Grande"]
     @State var porteSelected = Porte.pequeno
+    @State var failedInput = false
+    let tituloPreencheCampos = "Preencha campos para cãocular!"
     
     var body: some View {
         NavigationStack {
@@ -46,8 +48,13 @@ struct ContentView: View {
                     
                     Spacer()
                     if let result {
-                        Text("Seu cachorro tem, em idade humana...").font(.body1)
-                        Text("\(result) anos").font(.display)
+                        Text("Seu cachorro tem, em idade humana...")
+                            .font(.body1)
+                            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        Text("\(result) anos")
+                            .font(.display)
+                            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                            .contentTransition(.numericText())
                     } else {
                         Image(ImageResource.clarinha)
                             .resizable()
@@ -71,9 +78,13 @@ struct ContentView: View {
                 }
                 .textFieldStyle(.roundedBorder)
                 .keyboardType(.numberPad)
-            .padding()
-            .containerRelativeFrame(.vertical)
+                .padding()
+                .containerRelativeFrame(.vertical)
+                .animation(.easeInOut.speed(0.5), value: result)
             }
+            .alert(tituloPreencheCampos, isPresented: $failedInput, actions: {
+                Button("Ok", role: .cancel, action: {})
+            })
             .navigationTitle("Cãoculadora")
             .scrollDismissesKeyboard(.immediately)
             .toolbarBackground(.indigo, for: .navigationBar)
@@ -91,15 +102,18 @@ extension ContentView{
     
     func processYears(){
         print("cãocular")
-        guard let years else {
+        guard let years, let months else {
             print("Campos não preenchidos")
+            failedInput = true
             return }
-        guard let months else { return }
+//        guard let months else { return }
         guard months > 0 || years > 0 else{
             return
         }
         
-        result = porteSelected.calcularIdade(deAnos: years, eMeses: months)
+        withAnimation(.easeInOut.speed(0.5)){
+            result = porteSelected.calcularIdade(deAnos: years, eMeses: months)
+        }
         
     }
     
